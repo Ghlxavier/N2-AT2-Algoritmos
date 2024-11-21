@@ -7,18 +7,20 @@
 //Impressão de bilhete; <- Rafa
 //Cancelamento; <- Gustavo
 //Finalização; <- Rafa
-//e documentação <- Todos (gustavo)
+//e documentação <- Gustavo
 
 void Interface();
-
-
+void Reserva();
+void Impressao();
+void Cancelar();
 
 int main(){
-    int opc;
+    int opc = 0;
 
     Interface();
     scanf("%d", &opc);
 
+    do{
     switch(opc){
 
         case 1:
@@ -41,7 +43,7 @@ int main(){
         default:
             printf("Opcao invalida! O programa encerrara!");
     }
-
+    }while(opc <= 4 || opc != 0);
 
     return 0;
 }
