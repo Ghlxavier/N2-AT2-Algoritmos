@@ -16,11 +16,16 @@ void Reserva();
 void impressao();
 int pegarBilhete();
 void exibirBilhete();
+
+void Relatorio();
+void exibirRelatorioFinal();
 typedef struct {
 	int quantidadeBilhete;
 	int numeroAssento;
 	char tipoIngresso[15];
 	int incluiCombo;
+	float precoIngresso;
+	float precoCombo;
 } Bilhete;
 
 void Cancelar();
@@ -47,6 +52,7 @@ int main(){
 	        break;
 	
 	        case 4:
+	        	Relatorio();
 	            printf("Obrigado por escolher a HollowMovie!!!\n");
 	            printf("Volte Sempre!");
 	        break;
@@ -114,4 +120,36 @@ void exibirBilhete(Bilhete bilhete) {
 	printf("Numero do assento: %d\n", bilhete.numeroAssento);
 	printf("Tipo de ingresso: %s\n", bilhete.tipoIngresso);
 	printf("Combo incluido: %s\n", bilhete.incluiCombo ? "Sim" : "Nao");
+}
+
+void exibirRelatorioFinal(Bilhete bilhetes[], int tamanho) {
+	int totalDeIngressos = 0;
+	int totalDeCombos = 0;
+	float arrecadacaoTotal = 0.0;
+	int i;
+	for (i = 0; i < tamanho; i++) {
+		totalDeIngressos++;
+		arrecadacaoTotal += bilhetes[i].precoIngresso;
+		if (bilhetes[i].incluiCombo) {
+			totalDeCombos++;
+			arrecadacaoTotal += bilhetes[i].precoCombo;
+		}
+	}
+	
+	printf("\n          Relatorio Final          \n");
+	printf("Total de ingressos vendidos: %d\n", totalDeIngressos);
+	printf("Numero de combos vendidos: %d\n", totalDeCombos);
+	printf("Arrecadacao total na secao: R$ %.2f\n", arrecadacaoTotal);
+}
+
+void Relatorio(){
+	Bilhete bilhetes[] = {
+	    {1, 10, "Inteiro", 1, 20.00, 15.00},
+	    {2, 15, "Meia-entrada", 0, 10.00, 0.00},
+	    {3, 20, "Inteiro", 1, 20.00, 15.00},
+	    {4, 25, "Meia-entrada", 1, 10.00, 15.00}
+	};
+	int tamanho = sizeof(bilhetes) / sizeof(bilhetes[0]);
+	
+	exibirRelatorioFinal(bilhetes, tamanho);
 }
