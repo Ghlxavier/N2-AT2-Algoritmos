@@ -1,10 +1,9 @@
-/*
-	Autoria:
-	Andreas Marchi - https://github.com/AndreasGomesMarchi
-	Natanael Ramos - https://github.com/FNatanaelRamos97
-	Gustavo Xavier - https://github.com/Ghlxavier
-	Rafael Silva -   https://github.com/rafasilva41
-*/
+
+//Criadores desse programa: 
+//-FNatanaelRamos97 - https://github.com/FNatanaelRamos97
+//-AndreasGomesMarchi - https://github.com/AndreasGomesMarchi
+//-Ghlxavier - https://github.com/Ghlxavier
+//-rafasilva41 - https://github.com/rafasilva41
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,13 +47,12 @@ void cancelarBilhete();
 
 // Impressão dos bilhetes reservados
 void imprimirBilhetesReservados();
+void imprimirBilhete();
 
 // Funções para calcular totais e relatório final
 void gerarRelatorioFinal();
 
 int main() {
-	int i, j, k;
-	
     setlocale(LC_ALL, "pt_BR.UTF-8");
 
     Filme filmes[FILMES];
@@ -62,9 +60,9 @@ int main() {
     strcpy(filmes[1].nome, "As trancas do Rei Careca");
     strcpy(filmes[2].nome, "Quem foi que disse?");
 
-    for (k = 0; k < FILMES; k++) {
-    for (i = 0; i < FILAS; i++) {
-        for (j = 0; j < COLUNAS; j++) {
+    for (int k = 0; k < FILMES; k++) {
+    for (int i = 0; i < FILAS; i++) {
+        for (int j = 0; j < COLUNAS; j++) {
             filmes[k].assentos[i][j] = 'D'; 
             }
         }
@@ -120,6 +118,8 @@ void Interface() {
     printf("4 - Sair\n");
     printf("Escolha a opcao: ");
 }
+
+
 
 // Função para reservar bilhete
 void reservarBilhete(Bilhete *bilhetes, int *numeroCadastro, Filme filmes[FILMES], int *BilheteID, int *totalIngressos, int *totalCombos, double *totalArrecadado) {
@@ -203,38 +203,36 @@ int MeiaEntrada() {
 
 // Função para exibir filmes disponíveis
 void exibirFilmes(Filme filmes[FILMES]) {
-	int i;
-	
     printf("\nFilmes em cartaz\n\n");
-    for (i = 0; i < FILMES; i++) {
+    for (int i = 0; i < FILMES; i++) {
         printf("%d - %s\n", i + 1, filmes[i].nome);
     }
 }
 
 // Função para exibir assentos disponíveis
 void exibirAssentos(Filme *filme) {
-	int i, j;
-	
     printf("\nAssentos Disponiveis (D para Disponivel, X para Ocupado):\n\n");
 
     printf("    "); 
-    for (i = 0; i < COLUNAS; i++) {
+    for (int i = 0; i < COLUNAS; i++) {
         printf("%2d ", i + 1);
     }
     printf("\n   ");
-    for (i = 0; i < COLUNAS; i++) {
+    for (int i = 0; i < COLUNAS; i++) {
         printf("----");
     }
     printf("\n");
 
-    for (i = 0; i < FILAS; i++) {
+    for (int i = 0; i < FILAS; i++) {
         printf("%2d | ", i + 1); 
-        for (j = 0; j < COLUNAS; j++) {
+        for (int j = 0; j < COLUNAS; j++) {
             printf(" %c ", filme->assentos[i][j]); 
         }
         printf("\n");
     }
 }
+
+
 
 // Função para realizar a compra (marcar assento como ocupado)
 void compra(Filme *filme, Bilhete *bilhete) {
@@ -266,33 +264,91 @@ int combo() {
     return opcao == 1 ? 1 : 0;
 }
 
+
+
 // Função para imprimir bilhetes reservados
 void imprimirBilhetesReservados(Bilhete *bilhetes, int numeroCadastro, Filme filmes[FILMES]) {
-	int i;
+	int i, numeroBilhete = 0, op = 1, selecionar = 0;
 	
-    printf("\n-------- Bilhetes Reservados --------\n");
-    for (i = 0; i < numeroCadastro; i++) {
-        Bilhete bilhete = bilhetes[i];
-        printf("\nBilhete ID: %d\n", bilhete.bilheteID);
-        printf("Cliente: %s\n", bilhete.nomeCliente);
-        printf("Filme: %s\n", filmes[bilhete.filmeID].nome);
-        printf("Assento: Fila %d, Coluna %d\n", bilhete.fila + 1, bilhete.coluna + 1);
-        printf("Meia Entrada: %s\n", bilhete.meiaEntrada ? "Sim" : "Nao");
-        printf("Combo: %s\n", bilhete.combo ? "Sim" : "Nao");
-        printf("Valor Total: R$ %.2f\n", bilhete.valorIngresso);  
-        printf("-------------------------------------\n\n");
-    }
+	do{
+		printf("Selecione as opcao abaixo!\n\n");
+		printf("1 - Imprimir todos os bilhetes.\n");
+		printf("2 - Buscar bilhete por ID.\n\n");
+		printf("Digite a opcao: ");
+		scanf("%d", &selecionar);
+		
+		switch(selecionar){
+			case 1:
+				if(numeroCadastro == 0){
+					printf("Sem bilhetes para pesquisa\n\n");
+				}else{
+					for (i = 0; i < numeroCadastro; i++) {
+						Bilhete bilhete = bilhetes[i];
+						imprimirBilhete(bilhete, filmes);
+					}
+				}
+			break;
+
+			case 2:
+				if(numeroCadastro == 0){
+					printf("Sem bilhetes para pesquisa\n\n");
+				}else{
+					do{
+						printf("Digite ID do bilhete para a pesquisa: ");
+						scanf("%d", &numeroBilhete);
+						
+					    for (i = 0; i < numeroCadastro; i++) {
+					        Bilhete bilhete = bilhetes[i];
+					        
+					        if(bilhete.bilheteID == numeroBilhete){
+					        	imprimirBilhete(bilhete, filmes);
+						        
+						        break;
+							}else if(i == numeroCadastro-1){
+								printf("Bilhete nao encontrado!\n\n");
+							}
+						}
+					    
+					    printf("Deseja pesquisar outro bilhete 1 - SIM e 2 - NAO: ");
+					    scanf("%d", &op);
+			
+					}while(op == 1);
+				}
+			break;
+				
+			default:
+				printf("Opcao nao encontrada!\n\n");
+			break;
+		}
+		
+		printf("Deseja fazer outra pesquisa: 1 - SIM e 2 - NAO: ");
+		scanf("%d", &op);
+	
+    }while(op == 1);
+	
 }
+
+void imprimirBilhete(Bilhete bilhete, Filme filmes[FILMES]){
+		printf("\n-------- Bilhetes Reservado --------\n");
+		printf("\nBilhete ID: %d\n", bilhete.bilheteID);
+		printf("Cliente: %s\n", bilhete.nomeCliente);
+		printf("Filme: %s\n", filmes[bilhete.filmeID].nome);
+		printf("Assento: Fila %d, Coluna %d\n", bilhete.fila + 1, bilhete.coluna + 1);
+		printf("Meia Entrada: %s\n", bilhete.meiaEntrada ? "Sim" : "Nao");
+		printf("Combo: %s\n", bilhete.combo ? "Sim" : "Nao");
+		printf("Valor Total: R$ %.2f\n", bilhete.valorIngresso);  
+		printf("-------------------------------------\n\n"); 
+}
+
+
 
 // Função para cancelar bilhetes
 void cancelarBilhete(Bilhete *bilhetes, int *numeroCadastro, Filme filmes[FILMES], int *totalIngressos, int *totalCombos, double *totalArrecadado) {
-	int i, j;
-	
     int id, encontrado = 0;
     printf("\nInforme o ID do bilhete a ser cancelado: ");
     scanf("%d", &id);
 
-    for (i = 0; i < *numeroCadastro; i++) {
+    for (int i = 0; i < *numeroCadastro; i++) {
         if (bilhetes[i].bilheteID == id) {
             // Marcar o assento como disponível
             filmes[bilhetes[i].filmeID].assentos[bilhetes[i].fila][bilhetes[i].coluna] = 'D';
@@ -311,7 +367,7 @@ void cancelarBilhete(Bilhete *bilhetes, int *numeroCadastro, Filme filmes[FILMES
             }
 
             // Remover o bilhete cancelado
-            for (j = i; j < *numeroCadastro - 1; j++) {
+            for (int j = i; j < *numeroCadastro - 1; j++) {
                 bilhetes[j] = bilhetes[j + 1];
             }
             (*numeroCadastro)--;
@@ -327,6 +383,8 @@ void cancelarBilhete(Bilhete *bilhetes, int *numeroCadastro, Filme filmes[FILMES
         printf("\nBilhete nao encontrado!\n");
     }
 }
+
+
 
 // Função para calcular e exibir o relatório final
 void gerarRelatorioFinal(int totalIngressos, int totalCombos, double totalArrecadado) {
